@@ -63,10 +63,6 @@
                                 style="background: linear-gradient(135deg, #7fb77e, #5c9467); color: #fff; border:none; font-weight:600; box-shadow: 0 4px 8px rgba(92,148,103,0.3);">
                                 <i class="fas fa-plus me-1"></i> Actividad
                             </button>
-                            <button class="btn flex-fill" onclick="openAlertsModal({{ $cama->id }}, {{ $cama->number }})" 
-                                style="background: linear-gradient(135deg, #4a90e2, #356abe); color: #fff; border:none; font-weight:600; box-shadow: 0 4px 8px rgba(53,106,190,0.3);">
-                                <i class="fas fa-bell me-1"></i> Alertas
-                            </button>
                         </div>
                     </div>
                 </div>

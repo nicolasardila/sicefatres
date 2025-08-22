@@ -31,7 +31,7 @@ class EnviarAlertasCamas extends Command
 
             // Solo enviar correo si hay actividades vencidas
             if ($activities->isNotEmpty()) {
-                Mail::to('sanchezbreiner2014@gmail.com')
+                Mail::to('ardilanicolas71@gmail.com')
                     ->send(new AlertaCamaVencida($cama, $activities));
             }
         }

@@ -9,11 +9,16 @@
             <h4>Filtrar Reportes</h4>
         </div>
         <div class="card-body">
-            <form method="GET" action="{{ route('reports.index') }}" id="filtroForm">
-                <div class="row align-items-end">
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold mb-2">Tipo de Actividad</label>
-                        <div class="row" id="checkboxContainer">
+    <form method="GET" action="{{ route('reports.index') }}" id="filtroForm">
+        <div class="row g-4">
+            <!-- Filtro de actividades -->
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-light fw-bold">
+                        Tipo de Actividad
+                    </div>
+                    <div class="card-body p-3" style="max-height: 200px; overflow-y: auto;">
+                        <div class="row">
                             @php
                                 $tipos = [
                                     'mantenimiento' => 'Mantenimiento',
@@ -41,38 +46,47 @@
                             Debes seleccionar al menos una actividad.
                         </div>
                     </div>
-                    <div class="col-md-8">
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label for="worm_bed_id" class="form-label fw-bold mb-2">Cama</label>
-                                <select name="worm_bed_id" id="worm_bed_id" class="form-select">
-                                    <option value="">Todas las camas</option>
-                                    @foreach($beds as $bed)
-                                        <option value="{{ $bed->id }}" {{ request('worm_bed_id') == $bed->id ? 'selected' : '' }}>
-                                            Cama N° {{ $bed->number }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                       
-<div class="col-md-2 d-flex flex-column gap-2">
-    <button type="submit" class="btn btn-success w-100" id="filtrarBtn">
-        <i class="fas fa-filter me-1"></i> Filtrar
-    </button>
-    <a href="{{ route('reports.pdf', request()->query()) }}" 
-       class="btn btn-danger w-100" 
-       role="button" 
-       target="_blank" 
-       rel="noopener">
-       <i class="fas fa-file-pdf me-1"></i> Descargar PDF
-    </a>
-</div>
+                </div>
+            </div>
 
-                        </div>
+            <!-- Filtro de camas -->
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-light fw-bold">
+                        Seleccionar Cama
+                    </div>
+                    <div class="card-body p-3">
+                        <select name="worm_bed_id" id="worm_bed_id" class="form-select form-select-lg">
+                            <option value="">Todas las camas</option>
+                            @foreach($beds as $bed)
+                                <option value="{{ $bed->id }}" {{ request('worm_bed_id') == $bed->id ? 'selected' : '' }}>
+                                    Cama N° {{ $bed->number }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
+
+        <!-- Botones -->
+        <div class="row mt-4">
+            <div class="col-12 d-flex justify-content-center gap-3">
+                <button type="submit" class="btn btn-success px-5" id="filtrarBtn">
+                    <i class="fas fa-filter me-1"></i> Filtrar
+                </button>
+                <a href="{{ route('reports.pdf', request()->query()) }}" 
+                class="btn btn-danger px-5" 
+                role="button" 
+                target="_blank" 
+                rel="noopener">
+                    <i class="fas fa-file-pdf me-1"></i> Descargar PDF
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
     </div>
 
     <div class="card shadow">

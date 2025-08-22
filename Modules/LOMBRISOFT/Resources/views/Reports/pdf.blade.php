@@ -18,15 +18,18 @@
 
         /* Encabezado */
         .header {
-            text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 2px solid #004aad;
-            padding-bottom: 20px;
-        }
-        .header img.logo {
-            max-width: 150px;
-            margin-bottom: 10px;
-        }
+    text-align: center;
+    margin-bottom: 40px;
+    border-bottom: 2px solid #004aad;
+    padding-bottom: 20px;
+}
+
+.header img.logo {
+    display: block;
+    margin: 0 auto 10px auto; /* centra horizontalmente */
+    max-width: 150px;
+}
+
         .header h1 {
             font-size: 24pt;
             color: #004aad;
@@ -114,8 +117,11 @@
 <body>
     <!-- Encabezado -->
     <div class="header">
-        <img src="https://via.placeholder.com/150x50?text=Logo" alt="Logo" class="logo">
+        <img src="{{ public_path('imgLombri/logoreporte.png') }}" alt="Logo" class="logo">
         <h1>Reporte de Actividades</h1>
+        <div>Unidad Productiva de Lombricultivo</div>
+        <div>SEGUIMIENTO Y REPORTE DE ACTIVIDADES POR CAMAS DEL LOMBRICULTIVO</div>
+        
         <p>Generado el {{ date('d/m/Y') }} | xAI Solutions</p>
     </div>
 

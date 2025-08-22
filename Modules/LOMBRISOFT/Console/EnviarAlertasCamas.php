@@ -8,6 +8,8 @@ use Modules\LOMBRISOFT\Entities\WormBed;
 use Modules\LOMBRISOFT\Entities\BedActivity;
 use Modules\LOMBRISOFT\Mail\AlertaCamaVencida;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
 
 class EnviarAlertasCamas extends Command
 {
@@ -15,27 +17,33 @@ class EnviarAlertasCamas extends Command
     protected $description = 'Enviar correos de alerta de camas con actividades vencidas';
 
     public function handle()
-    {
-        // Obtener todas las camas
-        $camas = WormBed::all();
+{
+    $camas = WormBed::all();
 
-        foreach ($camas as $cama) {
-            // Filtrar solo actividades vencidas de esta cama
-            $activities = BedActivity::where('worm_bed_id', $cama->id)
-                ->get()
-                ->filter(function ($activity) {
-                    $nextExpected = Carbon::parse($activity->fecha_actividad)
-                        ->addDays($activity->frequency_days ?? 0);
-                    return $nextExpected->lt(Carbon::today());
-                });
+    foreach ($camas as $cama) {
+        $activities = BedActivity::where('worm_bed_id', $cama->id)
+            ->select('tipo', DB::raw('MAX(fecha_actividad) as ultima_fecha'))
+            ->groupBy('tipo')
+            ->get()
+            ->map(function ($actividad) use ($cama) {
+                return BedActivity::where('worm_bed_id', $cama->id)
+                    ->where('tipo', $actividad->tipo)
+                    ->whereDate('fecha_actividad', $actividad->ultima_fecha)
+                    ->first();
+            })
+            ->filter(function ($activity) {
+                $nextExpected = Carbon::parse($activity->fecha_actividad)
+                    ->addDays($activity->frequency_days ?? 0);
+                return $nextExpected->lt(Carbon::today());
+            });
 
-            // Solo enviar correo si hay actividades vencidas
-            if ($activities->isNotEmpty()) {
-                Mail::to('ardilanicolas71@gmail.com')
-                    ->send(new AlertaCamaVencida($cama, $activities));
-            }
+        if ($activities->isNotEmpty()) {
+            Mail::to('paceburo21@gmail.com')
+                ->send(new AlertaCamaVencida($cama, $activities));
         }
-
-        $this->info('Correos enviados correctamente.');
     }
+
+    $this->info('Correos enviados solo con la última actividad vencida de cada tipo.');
+}
+
 }

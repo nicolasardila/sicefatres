@@ -2,88 +2,88 @@
 
 @section('content')
 
-    @if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-    </div>
-    @endif
+@if (session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+</div>
+@endif
 
-    @if ($activities->isEmpty())
-    <div class="alert alert-info text-center">No hay actividades registradas.</div>
-    @else
-    <div class="card shadow-lg rounded">
-        <div class="card-header bg-success text-white text-center">
-            <h4>Listado de Actividades</h4>
+@if ($activities->isEmpty())
+<div class="alert alert-info text-center">No hay actividades registradas.</div>
+@else
+<div class="card shadow-lg rounded">
+    <div class="card-header bg-success text-white text-center">
+        <h4>Listado de Actividades</h4>
+    </div>
+    <div class="card shadow-lg rounded mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Filtrar Actividades</h5>
         </div>
-        <div class="card shadow-lg rounded mb-4">
-    <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Filtrar Actividades</h5>
+        <div class="card-body">
+            <form action="{{ route('lombrisoft.admin.bed_activities.index') }}" method="GET">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="filter_tipo" class="form-label">Tipo de Actividad</label>
+                        <select class="form-select" id="filter_tipo" name="tipo">
+                            <option value="">Todos los tipos</option>
+                            <option value="mantenimiento" {{ request('tipo') == 'mantenimiento' ? 'selected' : '' }}>Mantenimiento</option>
+                            <option value="alimentacion" {{ request('tipo') == 'alimentacion' ? 'selected' : '' }}>Alimentación</option>
+                            <option value="humedad" {{ request('tipo') == 'humedad' ? 'selected' : '' }}>Humedad</option>
+                            <option value="recoleccion" {{ request('tipo') == 'recoleccion' ? 'selected' : '' }}>Recolección</option>
+                            <option value="ph" {{ request('tipo') == 'ph' ? 'selected' : '' }}>pH</option>
+                            <option value="temperatura" {{ request('tipo') == 'temperatura' ? 'selected' : '' }}>Temperatura</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="filter_fecha_inicio" class="form-label">Fecha desde</label>
+                        <input type="date" class="form-control" id="filter_fecha_inicio" name="fecha_inicio" value="{{ request('fecha_inicio') }}">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="filter_fecha_fin" class="form-label">Fecha hasta</label>
+                        <input type="date" class="form-control" id="filter_fecha_fin" name="fecha_fin" value="{{ request('fecha_fin') }}">
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-12 text-end">
+                        <a href="{{ route('lombrisoft.admin.bed_activities.create') }}" class="btn btn-primary">Registrar Nueva Actividad</a>
+                        <button type="submit" class="btn btn-success me-2">
+                            <i class="fas fa-filter"></i> Filtrar
+                        </button>
+                        <a href="{{ route('lombrisoft.admin.bed_activities.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Limpiar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
     <div class="card-body">
-        <form action="{{ route('lombrisoft.admin.bed_activities.index') }}" method="GET">
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="filter_tipo" class="form-label">Tipo de Actividad</label>
-                    <select class="form-select" id="filter_tipo" name="tipo">
-                        <option value="">Todos los tipos</option>
-                        <option value="mantenimiento" {{ request('tipo') == 'mantenimiento' ? 'selected' : '' }}>Mantenimiento</option>
-                        <option value="alimentacion" {{ request('tipo') == 'alimentacion' ? 'selected' : '' }}>Alimentación</option>
-                        <option value="humedad" {{ request('tipo') == 'humedad' ? 'selected' : '' }}>Humedad</option>
-                        <option value="recoleccion" {{ request('tipo') == 'recoleccion' ? 'selected' : '' }}>Recolección</option>
-                        <option value="ph" {{ request('tipo') == 'ph' ? 'selected' : '' }}>pH</option>
-                        <option value="temperatura" {{ request('tipo') == 'temperatura' ? 'selected' : '' }}>Temperatura</option>
-                    </select>
-                </div>
-                
-                <div class="col-md-4">
-                    <label for="filter_fecha_inicio" class="form-label">Fecha desde</label>
-                    <input type="date" class="form-control" id="filter_fecha_inicio" name="fecha_inicio" value="{{ request('fecha_inicio') }}">
-                </div>
-                
-                <div class="col-md-4">
-                    <label for="filter_fecha_fin" class="form-label">Fecha hasta</label>
-                    <input type="date" class="form-control" id="filter_fecha_fin" name="fecha_fin" value="{{ request('fecha_fin') }}">
-                </div>
-            </div>
-            
-            <div class="row mt-3">
-             <div class="col-md-12 text-end">
-                   <a href="{{ route('lombrisoft.admin.bed_activities.create') }}" class="btn btn-primary">Registrar Nueva Actividad</a>
-                       <button type="submit" class="btn btn-success me-2">
-                        <i class="fas fa-filter"></i> Filtrar
-                       </button>
-                     <a href="{{ route('lombrisoft.admin.bed_activities.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> Limpiar
-                    </a>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-        <div class="card-body">
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover align-middle">
-            <thead class="table-dark text-center">
-                <tr>
-                    <th>Cama</th>
-                    <th>Tipo</th>
-                    <th>Fecha</th>
-                    <th>Hora</th>
-                    <th style="width: 180px;">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($activities as $activity)
-                <tr>
-                    <td>Cama N° {{ $activity->wormBed->number }}</td>
-                    <td>{{ ucfirst($activity->tipo) }}</td>
-                    <td>{{ $activity->fecha_actividad }}</td>
-                    <td>{{ $activity->hora_actividad ?? '-' }}</td>
-                    <td class="text-center">
-                        <button type="button" 
-                                class="btn btn-sm btn-outline-success me-1" 
-                                data-bs-toggle="modal" 
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover align-middle">
+                <thead class="table-dark text-center">
+                    <tr>
+                        <th>Cama</th>
+                        <th>Tipo</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th style="width: 180px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($activities as $activity)
+                    <tr>
+                        <td>Cama N° {{ $activity->wormBed->number }}</td>
+                        <td>{{ ucfirst($activity->tipo) }}</td>
+                        <td>{{ $activity->fecha_actividad }}</td>
+                        <td>{{ $activity->hora_actividad ?? '-' }}</td>
+                        <td class="text-center">
+                            <button type="button"
+                                class="btn btn-sm btn-outline-success me-1"
+                                data-bs-toggle="modal"
                                 data-bs-target="#editModal"
                                 data-id="{{ $activity->id }}"
                                 data-tipo="{{ $activity->tipo }}"
@@ -99,23 +99,23 @@
                                 data-ph="{{ $activity->ph->ph ?? '' }}"
                                 data-temperatura="{{ $activity->temperature->temperatura ?? '' }}"
                                 title="Editar">
-                            <i class="fas fa-edit"></i>
-                        </button>
+                                <i class="fas fa-edit"></i>
+                            </button>
 
-                        <form action="{{ route('lombrisoft.admin.bed_activities.destroy', $activity->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" 
-                                    class="btn btn-sm btn-outline-danger me-1" 
+                            <form action="{{ route('lombrisoft.admin.bed_activities.destroy', $activity->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button"
+                                    class="btn btn-sm btn-outline-danger me-1"
                                     onclick="confirmarEliminacion(this)"
                                     title="Eliminar">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </form>
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
 
-                        <button type="button" 
-                                class="btn btn-sm btn-outline-info" 
-                                data-bs-toggle="modal" 
+                            <button type="button"
+                                class="btn btn-sm btn-outline-info"
+                                data-bs-toggle="modal"
                                 data-bs-target="#viewModal"
                                 data-id="{{ $activity->id }}"
                                 data-tipo="{{ $activity->tipo }}"
@@ -131,17 +131,17 @@
                                 data-ph="{{ $activity->ph->ph ?? '' }}"
                                 data-temperatura="{{ $activity->temperature->temperatura ?? '' }}"
                                 title="Ver detalles">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-            </div>
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
-    @endif
+</div>
+@endif
 </div>
 <!-- Modal de Visualización -->
 <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
@@ -161,12 +161,13 @@
                             <li class="list-group-item"><strong>Fecha:</strong> <span id="viewFecha"></span></li>
                             <li class="list-group-item"><strong>Hora:</strong> <span id="viewHora"></span></li>
                         </ul>
-                    </div><div class="col-md-6">
-    <h5 class="mb-3">Detalles Específicos</h5>
-                <ul class="list-group list-group-flush" id="specificDetails">
-                    <!-- Aquí se insertan los detalles dinámicamente -->
-                </ul>
-</div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Detalles Específicos</h5>
+                        <ul class="list-group list-group-flush" id="specificDetails">
+                            <!-- Aquí se insertan los detalles dinámicamente -->
+                        </ul>
+                    </div>
 
 
                 </div>
@@ -287,20 +288,20 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const editModal = document.getElementById('editModal');
-        
+
         // Función para mostrar/ocultar campos según el tipo de actividad
         function actualizarCampos(tipo) {
             // Ocultar todos los campos específicos primero
             document.querySelectorAll('.tipo-campo').forEach(campo => {
                 campo.style.display = 'none';
             });
-            
+
             // Mostrar solo los campos correspondientes al tipo seleccionado
             document.querySelectorAll(`.tipo-campo[data-tipo="${tipo}"]`).forEach(campo => {
                 campo.style.display = 'block';
             });
         }
-        
+
         // Evento cuando se abre el modal
         editModal.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
@@ -343,7 +344,7 @@
             // Actualizar campos visibles según el tipo
             actualizarCampos(tipo);
         });
-        
+
         // Evento cuando cambia el tipo de actividad
         document.getElementById('editTipo').addEventListener('change', function() {
             actualizarCampos(this.value);
@@ -372,61 +373,79 @@
         });
     }
     // Modal de Visualización
-document.getElementById('viewModal').addEventListener('show.bs.modal', function(event) {
-    const button = event.relatedTarget;
-    const tipo = button.getAttribute('data-tipo');
-    
-    // Establecer valores básicos
-    document.getElementById('viewCama').textContent = button.getAttribute('data-cama');
-    document.getElementById('viewTipo').textContent = tipo;
-    document.getElementById('viewFecha').textContent = button.getAttribute('data-fecha');
-    document.getElementById('viewHora').textContent = button.getAttribute('data-hora') || 'No registrada';
-    document.getElementById('viewDescripcion').textContent = button.getAttribute('data-descripcion') || 'Sin descripción';
+    document.getElementById('viewModal').addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const tipo = button.getAttribute('data-tipo');
 
-    // Contenedor de detalles específicos
-    const detailsContainer = document.getElementById('specificDetails');
-    detailsContainer.innerHTML = '';
+        // Establecer valores básicos
+        document.getElementById('viewCama').textContent = button.getAttribute('data-cama');
+        document.getElementById('viewTipo').textContent = tipo;
+        document.getElementById('viewFecha').textContent = button.getAttribute('data-fecha');
+        document.getElementById('viewHora').textContent = button.getAttribute('data-hora') || 'No registrada';
+        document.getElementById('viewDescripcion').textContent = button.getAttribute('data-descripcion') || 'Sin descripción';
 
-    const tipoMap = {
-        'alimentacion': [
-            { label: 'Cantidad Alimento', value: button.getAttribute('data-cantidad-alimento'), unit: 'kg' },
-            { label: 'Tipo Alimento', value: button.getAttribute('data-tipo-alimento') }
-        ],
-        'humedad': [
-            { label: 'Nivel Humedad', value: button.getAttribute('data-nivel-humedad'), unit: '%' }
-        ],
-        'recoleccion': [
-            { label: 'Tipo Recolección', value: button.getAttribute('data-tipo-recoleccion') },
-            { label: 'Cantidad Recolectada', value: button.getAttribute('data-cantidad-recolectada'), unit: 'kg' }
-        ],
-        'ph': [
-            { label: 'Nivel de pH', value: button.getAttribute('data-ph') }
-        ],
-        'temperatura': [
-            { label: 'Temperatura', value: button.getAttribute('data-temperatura'), unit: '°C' }
-        ],
-        'mantenimiento': [
-            { label: 'Actividad', value: 'Mantenimiento general' }
-        ]
-    };
+        // Contenedor de detalles específicos
+        const detailsContainer = document.getElementById('specificDetails');
+        detailsContainer.innerHTML = '';
 
-    const detalles = tipoMap[tipo] || [];
+        const tipoMap = {
+            'alimentacion': [{
+                    label: 'Cantidad Alimento',
+                    value: button.getAttribute('data-cantidad-alimento'),
+                    unit: 'kg'
+                },
+                {
+                    label: 'Tipo Alimento',
+                    value: button.getAttribute('data-tipo-alimento')
+                }
+            ],
+            'humedad': [{
+                label: 'Nivel Humedad',
+                value: button.getAttribute('data-nivel-humedad'),
+                unit: '%'
+            }],
+            'recoleccion': [{
+                    label: 'Tipo Recolección',
+                    value: button.getAttribute('data-tipo-recoleccion')
+                },
+                {
+                    label: 'Cantidad Recolectada',
+                    value: button.getAttribute('data-cantidad-recolectada'),
+                    unit: button.getAttribute('data-tipo-recoleccion') === 'lixiviado' ? 'lts' : 'kg'
+                }
+            ],
+            'ph': [{
+                label: 'Nivel de pH',
+                value: button.getAttribute('data-ph')
+            }],
+            'temperatura': [{
+                label: 'Temperatura',
+                value: button.getAttribute('data-temperatura'),
+                unit: '°C'
+            }],
+            'mantenimiento': [{
+                label: 'Actividad',
+                value: 'Mantenimiento general'
+            }]
+        };
 
-    detalles.forEach(detalle => {
-        if (detalle.value && detalle.value !== 'N/A') {
-            const item = document.createElement('li');
-            item.className = 'list-group-item';
-            item.innerHTML = `<strong>${detalle.label}:</strong> ${detalle.value} ${detalle.unit || ''}`;
-            detailsContainer.appendChild(item);
+        const detalles = tipoMap[tipo] || [];
+
+        detalles.forEach(detalle => {
+            if (detalle.value && detalle.value !== 'N/A') {
+                const item = document.createElement('li');
+                item.className = 'list-group-item';
+                item.innerHTML = `<strong>${detalle.label}:</strong> ${detalle.value} ${detalle.unit || ''}`;
+                detailsContainer.appendChild(item);
+            }
+        });
+
+        if (detailsContainer.children.length === 0) {
+            const emptyItem = document.createElement('li');
+            emptyItem.className = 'list-group-item text-muted';
+            emptyItem.textContent = 'No hay detalles específicos registrados';
+            detailsContainer.appendChild(emptyItem);
         }
     });
-
-    if (detailsContainer.children.length === 0) {
-        const emptyItem = document.createElement('li');
-        emptyItem.className = 'list-group-item text-muted';
-        emptyItem.textContent = 'No hay detalles específicos registrados';
-        detailsContainer.appendChild(emptyItem);
-    }
-});
 </script>
 @endsection

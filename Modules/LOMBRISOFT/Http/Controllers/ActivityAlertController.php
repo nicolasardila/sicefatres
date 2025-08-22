@@ -239,24 +239,34 @@ class ActivityAlertController extends Controller
     $camas = WormBed::all();
 
     foreach ($camas as $cama) {
-        // Filtrar actividades vencidas
+        // Traer la última actividad de cada tipo
         $activities = BedActivity::where('worm_bed_id', $cama->id)
+            ->select('tipo', DB::raw('MAX(fecha_actividad) as ultima_fecha'))
+            ->groupBy('tipo')
             ->get()
+            ->map(function ($actividad) use ($cama) {
+                // Buscar el registro completo de esa última actividad
+                return BedActivity::where('worm_bed_id', $cama->id)
+                    ->where('tipo', $actividad->tipo)
+                    ->whereDate('fecha_actividad', $actividad->ultima_fecha)
+                    ->first();
+            })
             ->filter(function ($activity) {
+                // Validar que esté vencida
                 $nextExpected = Carbon::parse($activity->fecha_actividad)
                     ->addDays($activity->frequency_days ?? 0);
                 return $nextExpected->lt(Carbon::today());
             });
 
         if ($activities->isNotEmpty()) {
-            // Enviar correo solo si hay actividades vencidas
             Mail::to('ardilanicolas71@gmail.com')
                 ->send(new AlertaCamaVencida($cama, $activities));
         }
     }
 
-    return response()->json(['message' => 'Se enviaron las alertas solo a camas con actividades vencidas.']);
+    return response()->json(['message' => 'Se enviaron las alertas solo a la última actividad vencida de cada tipo.']);
 }
+
 
 
 }

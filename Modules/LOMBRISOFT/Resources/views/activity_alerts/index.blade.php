@@ -2,12 +2,6 @@
 
 @section('content')
 <div class="container mt-5">
-    <div class="mb-3 text-end">
-        <a href="{{ route('lombrisoft.admin.activity_alerts.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus-circle"></i> Nueva Alerta
-        </a>
-    </div>
-
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -70,6 +64,9 @@
                             <a href="{{ route('lombrisoft.admin.activity_alerts.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-times"></i> Limpiar
                             </a>
+                            <a href="{{ route('lombrisoft.admin.activity_alerts.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i> Nueva Alerta
+        </a>
                         </div>
                     </div>
                 </form>

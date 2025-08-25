@@ -51,4 +51,11 @@ class BedActivity extends Model
     {
         return $this->hasOne(TemperatureActivity::class, 'bed_activity_id');
     }
+
+    // Alerta asociada a la actividad (por cama y tipo)
+    public function alert()
+    {
+        return $this->hasOne(ActivityAlert::class, 'worm_bed_id', 'worm_bed_id')
+            ->where('activity_type', $this->tipo);
+    }
 }

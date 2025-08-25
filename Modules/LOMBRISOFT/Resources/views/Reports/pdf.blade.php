@@ -32,7 +32,7 @@
 
         .header h1 {
             font-size: 24pt;
-            color: #004aad;
+            color: #1c5a0fff;
             margin: 0;
         }
         .header p {
@@ -62,7 +62,7 @@
         .label {
             font-weight: 600;
             width: 200px;
-            color: #004aad;
+            color: #2f6318ff;
             min-width: 200px;
         }
         .value {
@@ -87,7 +87,7 @@
                 font-size: 10pt;
             }
             .header {
-                border-bottom: 1px solid #004aad;
+                border-bottom: 1px solid #00ad09ff;
             }
             .record {
                 box-shadow: none;
@@ -189,6 +189,38 @@
         <div class="field">
             <div class="label">Temperatura (°C)</div>
             <div class="value">{{ $actividad->temperature->valor ?? '-' }}</div>
+        </div>
+        @endif
+
+        {{-- Alerta asociada a la actividad --}}
+        @php($alerta = $actividad->alert)
+        @if($alerta)
+        <div class="field">
+            <div class="label">Alerta</div>
+            <div class="value">
+                {{ $alerta->is_active ? 'Activa' : 'Inactiva' }}
+                @php(
+                    $baseFecha = $actividad->fecha_actividad ? \Carbon\Carbon::parse($actividad->fecha_actividad) : null
+                )
+                @php(
+                    $proxima = $alerta->next_expected
+                        ? \Carbon\Carbon::parse($alerta->next_expected)
+                        : ($baseFecha ? $baseFecha->copy()->addDays($alerta->frequency_days) : null)
+                )
+                @if($proxima)
+                    | Próxima: {{ $proxima->format('d/m/Y') }}
+                    @php($fechaActivacion = $proxima->copy()->subDays($alerta->warning_days))
+                    | Se activa el: {{ $fechaActivacion->format('d/m/Y') }}
+                @endif
+                @php($hoy = \Carbon\Carbon::today())
+                @if($proxima && $proxima->lt($hoy))
+                    | Estado: Vencida
+                @elseif($proxima && $hoy->betweenIncluded($fechaActivacion ?? $hoy->copy()->addDay(), $proxima))
+                    | Estado: Próxima
+                @else
+                    | Estado: Al día
+                @endif
+            </div>
         </div>
         @endif
     </div>
